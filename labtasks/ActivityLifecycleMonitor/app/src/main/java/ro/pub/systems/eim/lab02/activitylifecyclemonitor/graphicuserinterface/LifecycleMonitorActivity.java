@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
@@ -62,7 +63,77 @@ public class LifecycleMonitorActivity extends AppCompatActivity {
         Button cancelButton = (Button) findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(buttonClickListener);
 
-        Log.d(Constants.TAG, "onCreate() method was invoked without a previous state");
+        if (savedInstanceState == null) {
+            Log.d(Constants.TAG, "onCreate() method was invoked without a previous state");
+        } else {
+            Log.d(Constants.TAG, "onCreate() method was invoked with a previous state");
+        }
+
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(Constants.TAG, "onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(Constants.TAG, "onStop");
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(Constants.TAG, "onDestroy");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        CheckBox checkBox = (CheckBox) findViewById(R.id.remember_me_checkbox);
+        EditText editUserName = (EditText) findViewById(R.id.username_edit_text);
+        EditText editPassword = (EditText) findViewById(R.id.password_edit_text);
+
+        if (checkBox.isChecked()) {
+            outState.putString("username", editUserName.getText().toString());
+            outState.putString("password", editPassword.getText().toString());
+            outState.putBoolean("checkbox", true);
+        }
+        Log.d(Constants.TAG, "onSaveInstanceState");
+    }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            CheckBox checkBox = (CheckBox) findViewById(R.id.remember_me_checkbox);
+            EditText editUserName = (EditText) findViewById(R.id.username_edit_text);
+            EditText editPassword = (EditText) findViewById(R.id.password_edit_text);
+
+
+            checkBox.setChecked(savedInstanceState.getBoolean("checkbox"));
+            editUserName.setText(savedInstanceState.getString("username"));
+            editPassword.setText(savedInstanceState.getString("password"));
+        }
+
+
+        Log.d(Constants.TAG, "onRestoreInstanceState");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(Constants.TAG, "onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(Constants.TAG, "onResume");
+    }
 }
